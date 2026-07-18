@@ -1,8 +1,8 @@
 # Contributing to paymenthub-ee-connector-mojaloop
 
-Thank you for your interest in contributing to paymenthub-ee-connector-mojaloop! We welcome contributions from the community to help improve financial inclusion solutions globally.
+Thank you for your interest in contributing to the paymenthub-ee-connector-mojaloop! We welcome contributions from the community to help improve financial inclusion solutions globally.
 
-To ensure a smooth collaboration process and maintain code quality, we enforce a strict contribution workflow. Please read this guide carefully before submitting any code.
+To ensure a smooth collaboration process and maintain code quality, we enforce a strict **7-Step Contribution Workflow**. Please read this guide carefully before submitting any code.
 
 ## Quick Links
 
@@ -25,10 +25,10 @@ We avoid "surprise" contributions. Before writing code, you must validate your i
 
 ## Step 1: Discuss on Slack
 
-Before you start coding (especially for new features or refactoring), you must signal your intent.
+Before you start coding (especially for new features, UI changes, or refactoring), you must signal your intent.
 
 1. **Join the Community:** [Mifos Slack](https://mifos.slack.com)
-2. **Find the Channel:** Navigate to the channel for this repo/project
+2. **Find the Channel:** Navigate to `# channel for repo`
 3. **Post Your Proposal:**
    - **Features:** Explain what you want to build and why.
    - **Bugs:** Briefly explain the issue and provide screenshots if applicable.
@@ -41,12 +41,13 @@ Before you start coding (especially for new features or refactoring), you must s
 All development work is tracked in Jira to manage the release backlog and ensure transparency.
 
 - **System:** [Mifos Jira](https://mifosforge.jira.com)
-- **Project:** see this repo's README/Wiki for the Jira project key and board.
+- **Project:** [PROJECT NAME]
+- **Board:** [Board 166](https://mifosforge.jira.com/jira/software/c/projects/MXWAR/boards/166) (Active Development Board)
 
 ### Workflow
 
-1. **Search:** Check the project's Jira board to ensure the ticket doesn't already exist.
-2. **Create:** If unique, create a new ticket in the project.
+1. **Search:** Check the [Jira Board](https://mifosforge.jira.com/jira/software/c/projects/MXWAR/boards/166) to ensure the ticket doesn't already exist.
+2. **Create:** If unique, create a new ticket in Project MXWAR.
    - **Summary:** `[Component] Concise description` (e.g., `[Client] Fix submit button alignment`)
    - **Description:** Steps to reproduce, expected result, actual result, and environment details.
 3. **Assign:**
@@ -66,8 +67,8 @@ We follow a strict branching model to keep our history clean.
 
 - **Upstream Branch:** Always branch from `dev`. Never branch from `master` or `main`.
 - **Naming Convention:** Your branch name must include the Jira Ticket ID.
-  - **Format:** `<TICKET-ID>-<short-description>`
-  - **Example:** `git checkout -b PROJ-123-fix-login-button`
+  - **Format:** `MXWAR-<ID>-<short-description>`
+  - **Example:** `git checkout -b MXWAR-123-fix-login-button`
 
 ### Reserved Branch Names
 
@@ -86,14 +87,49 @@ The following branch names and tags (and their derivatives/extensions) are reser
 
 ---
 
-## Step 4: Commit Hygiene (Squash)
+## Step 4: UI/UX Consistency
+
+The Web App utilizes React with ShadCN UI and Tailwind CSS. Design consistency is critical for user trust in financial software.
+
+### Visual Checks
+
+- **Reference:** Match the Figma mockup or the existing page layout exactly.
+- **Grid System:** Spacing must be multiples of 8px (8px, 16px, 24px). Do not use arbitrary values like 10px or 15px.
+- **Typography:** Use standard fonts and weights defined in the Tailwind configuration.
+- **Components:** Always use ShadCN UI components instead of native HTML tags when possible.
+
+### Evidence Requirement
+
+You must attach **"Before"** and **"After"** screenshots to your Pull Request description. PRs involving UI changes without screenshots will be declined.
+
+---
+
+## Step 5: Code Formatting (Prettier)
+
+We use Prettier to enforce a consistent code style automatically. This eliminates "style wars" in code review.
+
+- **Configuration:** The project includes a `.prettierrc` or Prettier configuration in `package.json`.
+- **Run Prettier:** Before committing, run the following command in the root directory:
+  ```bash
+  npx prettier --write .
+  ```
+- **Linting:** Ensure your code passes linting:
+  ```bash
+  npm run lint
+  ```
+
+> ⚠️ If the CI build fails due to formatting or linting errors, your PR will not be reviewed.
+
+---
+
+## Step 6: Commit Hygiene (Squash)
 
 We maintain a linear, meaningful git history.
 
 - **One Feature = One PR:** Do not combine unrelated fixes.
 - **Squash Requirement:** If your PR contains more than 2 commits, you must squash them.
   - ❌ **Bad History:** `init`, `wip`, `typo`, `fix`, `fix again`
-  - ✅ **Good History:** `PROJ-123: Implement client search functionality`
+  - ✅ **Good History:** `MXWAR-123: Implement client search functionality`
 
 **How to Squash (Example for last 2 commits):**
 
@@ -133,18 +169,23 @@ We maintain a linear, meaningful git history.
 
 ---
 
-## Step 5: Pull Request Checklist
+## Step 7: Pull Request Checklist
 
 When you are ready to submit your PR:
 
 - [ ] **Target:** The `dev` branch.
-- [ ] **Title:** Includes the Jira Key (e.g., `PROJ-123: Fix login button`).
+- [ ] **Title:** Includes the Jira Key (e.g., `MXWAR-123: Fix login button`).
 - [ ] **Description:** Includes a link to the Jira ticket.
 - [ ] **Context:** Includes a link to the Slack discussion or summary of approval.
-- [ ] **Quality:** Passes this project's linting/formatting/test tooling and CI checks.
-- [ ] **AI use:** Declare if you used AI and where. Use of AI is fine but you are expected to have reviewed the output, made necessary changes, and removed any unnecessary AI-added content (e.g. random templates/styles the task didn't call for).
+- [ ] **Visuals:** "Before" and "After" screenshots are attached (if UI related).
+- [ ] **Quality:** Prettier formatting is applied and linting passes.
 
 ---
+
+## Additional Resources
+
+- Learn how to [format pull requests](#best-practices-to-send-pull-requests).
+- Read how to [rebase/merge upstream branches](#configuring-remotes).
 
 ## Git and GitHub Workflow
 
@@ -296,7 +337,7 @@ If running a build is not required for a particular commit (in some cases like a
 
 ## Getting Help
 
-If you get stuck, please reach out on [Mifos Slack](https://mifos.slack.com). We are happy to help you navigate the codebase or troubleshoot environment issues!
+If you get stuck, please reach out in the `#web-app` channel on [Slack](https://mifos.slack.com). We are happy to help you navigate the codebase or troubleshoot environment issues!
 
 ---
 
