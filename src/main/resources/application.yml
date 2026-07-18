@@ -1,0 +1,88 @@
+# parties:
+#   - tenantId: greenbank
+#     fspId: greenbank
+#     domain: ph-ee-connector-mojaloop-java.paymenthub.svc.cluster.local
+#   - tenantId: bluebank
+#     fspId: bluebank
+#     domain: ph-ee-connector-mojaloop-java.paymenthub.svc.cluster.local
+
+camel:
+  server-port: 5000
+  springboot:
+    main-run-controller: true
+  dataformat:
+    json-jackson:
+      auto-discover-object-mapper: true
+
+bpmn:
+  flows:
+    party-lookup: "PayeePartyLookup-{tenant}"
+    #party-lookup: "PartyLookup-{tenant}" #party-lookup-DFSPID.bpmn
+    #party-lookup: "PayerFundTransfer-{dfspid}"
+    quote: "PayeeQuoteTransfer-{tenant}"
+    transaction-request: "PayerTransactionRequest-{tenant}" #payer-transaction-request-DFSPID.bpmn
+
+zeebe:
+  client:
+    max-execution-threads: 50
+    evenly-allocated-max-jobs: 1000
+    poll-interval: 10
+#    max-execution-threads: 100
+#    number-of-workers: 15
+#    evenly-allocated-max-jobs: "#{${zeebe.client.max-execution-threads} / ${zeebe.client.number-of-workers}}"
+  broker:
+    #contactpoint: "ph-ee-zeebe:26500"
+    contactpoint: "zeebe-gateway.mifos.gazelle.test:80"
+
+connector:
+  ilp-secret: h4on38bsDjKiat2783gnklgafikmeuu5123kpobb7jm99
+
+
+mojaloop:
+  enabled: true
+  perf-mode: false
+  perf-resp-delay: 100
+
+switch:
+  quotes-host: http://fspiop-api-svc.vnext.svc.cluster.local:4000
+  quote-service:  http://fspiop-api-svc.vnext.svc.cluster.local:4000
+  als-host: http://fspiop-api-svc.vnext.svc.cluster.local:4000
+  account-lookup-service: http://fspiop-api-svc.vnext.svc.cluster.local:4000
+  transfers-host: http://fspiop-api-svc.vnext.svc.cluster.local:4000
+  transfer-service:  http://fspiop-api-svc.vnext.svc.cluster.local:4000
+  transactions-host: http://fspiop-api-svc.vnext.svc.cluster.local:4000
+  transaction-request-service: http://fspiop-api-svc.vnext.svc.cluster.local:4000
+  oracle-host: ""
+
+dfspids: greenbank, bluebank
+
+# logging:
+#   level:
+#     root: DEBUG
+#     org:
+#       apache:
+#         camel: DEBUG
+
+
+
+server:
+  port: 8080
+management:
+  endpoint:
+    web:
+      exposure:
+        include: health,info,camelroutes
+    health:
+      enabled: true
+      probes:
+        enabled: true
+      liveness:
+        enabled: true
+      readiness:
+        enabled: true
+
+security:
+  jws:
+    enable: false
+    response:
+      enable: false

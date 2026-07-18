@@ -1,0 +1,58 @@
+package org.mifos.connector.mojaloop.camel.trace;
+
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+import org.apache.camel.spi.UuidGenerator;
+import org.mifos.connector.mojaloop.camel.config.CamelProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+// import org.wildfly.common.ref.Log.logger;
+
+import com.fasterxml.jackson.annotation.ObjectIdGenerators.UUIDGenerator;
+
+import java.math.BigInteger;
+import java.util.UUID;
+
+import static org.mifos.connector.mojaloop.camel.config.CamelProperties.HEADER_TRACEPARENT;
+
+@Component
+public class GetCachedTransactionIdProcessor implements Processor {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Override
+    public void process(Exchange exchange) {
+        String transactionIdKey = null;
+        //String traceparent = exchange.getIn().getHeader(HEADER_TRACEPARENT, String.class);
+        String traceparent = AddTraceHeaderProcessor.GAZELLE_GT;
+        logger.info("TOMD trace parent header: {}", traceparent);
+
+        String transactionId = resolveTransactionIdFromTraceparent(traceparent);
+        
+
+        logger.info("resolved parent {} to transactionId {}", traceparent, transactionId);
+        exchange.setProperty(CamelProperties.CACHED_TRANSACTION_ID, transactionId);
+
+        if (transactionId == null) {
+            logger.error("FATAL: failed to resolve transactionIdKey {} in local TransactionCache, stopping route now", transactionIdKey);
+            exchange.setRouteStop(true);
+        }
+    }
+
+    public static String resolveTransactionIdFromTraceparent(String traceparent) {
+        // try { 
+        //     if (traceparent == null || traceparent.isEmpty()) {
+        //         return null;
+        //     }
+        // } catch (Exception e) {
+        //     return null;
+        // }
+        String parts = traceparent.split("-")[1];
+        Long most = new BigInteger(parts.substring(0, 16), 16).longValue();
+        Long least = new BigInteger(parts.substring(16, 32), 16).longValue();
+        return new UUID(most, least).toString();
+        
+        
+    }
+}
