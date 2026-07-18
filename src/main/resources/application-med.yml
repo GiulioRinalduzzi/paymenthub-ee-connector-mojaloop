@@ -5,10 +5,3 @@ parties:
   - tenantId: bluebank
     fspId: bluebank
     domain: ph-ee-connector-mojaloop-java.paymenthub.svc.cluster.local
-# parties:
-#   - tenantId: tn05
-#     fspId: in03tn05
-#     domain: in03tn05.mifos.io
-#   - tenantId: tn06
-#     fspId: in03tn06
-#     domain: in03tn06.mifos.io
