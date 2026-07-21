@@ -72,7 +72,6 @@ public class PartyLookupWorkers {
     @PostConstruct
     public void setupWorkers() {
         // logger.info("Logging all dfspids:");
-        // dfspids.forEach(dfspId -> logger.info("TOMD dfspid: {}", dfspId));
         for (String dfspId : dfspids) {
             logger.info("## generating " + WORKER_PARTY_LOOKUP_REQUEST + "{} zeebe worker", dfspId);
             zeebeClient.newWorker()
@@ -89,7 +88,6 @@ public class PartyLookupWorkers {
                         Object channelRequest = existingVariables.get(CHANNEL_REQUEST);
                         // only saved for operations to identify workflow
                         if (existingVariables.get(INITIATOR_FSP_ID) == null) {
-                            //TOMD TODO why this change to the initiatorFspId? Check against master branch and v1.5.0 tag 
 //                            TransactionChannelRequestDTO channelRequestObject = objectMapper.readValue((String) channelRequest, TransactionChannelRequestDTO.class);
 //                            PartyIdInfo initiatorParty = isTransactionRequest ? channelRequestObject.getPayee().getPartyIdInfo() : channelRequestObject.getPayer().getPartyIdInfo();
                             String initiatorFspId = partyProperties.getPartyByTenant(tenantId).getFspId();

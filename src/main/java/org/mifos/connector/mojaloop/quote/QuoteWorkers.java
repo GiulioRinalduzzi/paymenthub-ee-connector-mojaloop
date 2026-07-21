@@ -63,6 +63,9 @@ public class QuoteWorkers {
     @Value("${mojaloop.enabled}")
     private boolean isMojaloopEnabled;
 
+    @Value("${switch.quotes-host}")
+    private String quoteHost;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -97,9 +100,6 @@ public class QuoteWorkers {
                             TransactionChannelRequestDTO channelRequest = objectMapper.readValue((String) existingVariables.get(CHANNEL_REQUEST), TransactionChannelRequestDTO.class);
                             QuoteSwitchResponseDTO response = new QuoteSwitchResponseDTO();
                             response.setTransferAmount(channelRequest.getAmount());
-                            //TOMD TODO: the quote response does not seem to like zero value for payeeFspFee (returns 400 for the PUT operation)
-                            //   this is likely a bug in vNext , but largely irrelevant for us in the future so we set it to non zero here
-                            //  Also TODO: where should this be set ideally ?? 
                             response.setPayeeFspFee(new FspMoneyData(new BigDecimal("0.5"), channelRequest.getAmount().getCurrency()).toMoneyData());
                             response.setPayeeFspCommission(new FspMoneyData(new BigDecimal("0.5"), channelRequest.getAmount().getCurrency()).toMoneyData());
                             response.setExpiration("never");
@@ -130,11 +130,6 @@ public class QuoteWorkers {
                         Exchange exchange = new DefaultExchange(camelContext);
                         exchange.getIn().setBody(existingVariables.get(QUOTE_SWITCH_REQUEST));
                         Object quoteId = existingVariables.get(QUOTE_ID);
-                        //TOMD TODO : the quoteId is not being set in the zeebe variables, so we set it here
-                        // if (quoteId == null) {
-                        //     quoteId = UUID.randomUUID().toString();
-                        //     existingVariables.put(QUOTE_ID, quoteId);
-                        // }
                         exchange.setProperty(QUOTE_ID, UUID.randomUUID().toString());
                         Object errorInformation = existingVariables.get(ERROR_INFORMATION);
                         if (errorInformation != null) {
@@ -156,9 +151,7 @@ public class QuoteWorkers {
                                     HEADER_TRACEPARENT,
                                     LOCAL_QUOTE_RESPONSE
                             );
-                            // exchange.setProperty(HOST, "http://" + existingVariables.get("X-Quote-Callback-Url"));
-                            // TOMD: TODO: remove hardcoded URL
-                            exchange.setProperty(HOST, "http://fspiop-api-svc.vnext.svc.cluster.local:4000");
+                            exchange.setProperty(HOST, quoteHost);
                             producerTemplate.send("direct:send-quote-to-switch", exchange);
                         }
                         client.newCompleteCommand(job.getKey())

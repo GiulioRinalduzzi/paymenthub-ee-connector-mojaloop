@@ -203,7 +203,6 @@ public class IlpConditionHandlerImpl {
     }
 
     /**
-     * TOMD TODO : this approach needs verification for robustness 
      * Writes a custom length prefix to the stream
      * For lengths <= 127, it's a single byte.
      * For lengths > 127, it's a 3-byte sequence: 0x82 followed by the 2-byte big-endian length.

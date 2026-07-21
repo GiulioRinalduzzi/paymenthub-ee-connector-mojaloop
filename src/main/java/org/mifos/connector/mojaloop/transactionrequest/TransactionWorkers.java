@@ -96,11 +96,6 @@ public class TransactionWorkers {
                         logger.info("Job '{}' started from process '{}' with key {}", job.getType(), job.getBpmnProcessId(), job.getKey());
                         Map<String, Object> existingVariables = job.getVariablesAsMap();
 
-//                        Exchange exchange = new DefaultExchange(camelContext);
-//                        exchange.setProperty(TRANSACTION_ID, existingVariables.get(TRANSACTION_ID));
-//
-//                        producerTemplate.send("", exchange);
-
                         client.newCompleteCommand(job.getKey())
                                 .send()
                                 ;
@@ -117,10 +112,6 @@ public class TransactionWorkers {
                         Map<String, Object> existingVariables = job.getVariablesAsMap();
                         existingVariables.put(PAYER_CONFIRMATION_RETRY_COUNT, 1 + (Integer) existingVariables.getOrDefault(PAYER_CONFIRMATION_RETRY_COUNT, -1));
                         existingVariables.put(AUTH_RETRIES_LEFT_COUNT, 1 + (Integer) existingVariables.getOrDefault(AUTH_RETRIES_LEFT_COUNT, -1));
-
-//                        Exchange exchange = new DefaultExchange(camelContext);
-//                        exchange.setProperty(TRANSACTION_ID, existingVariables.get(TRANSACTION_ID));
-//                        producerTemplate.send("", exchange);
 
                         client.newCompleteCommand(job.getKey())
                                 .variables(existingVariables)

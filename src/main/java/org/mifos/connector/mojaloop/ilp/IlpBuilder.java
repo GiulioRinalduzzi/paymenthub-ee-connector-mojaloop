@@ -26,8 +26,6 @@ import java.math.BigDecimal;
 public class IlpBuilder {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    //private static final String ILP_ADDRESS_TEMPLATE = "g.tz.%s.%s.%s";
-    //TOMD TODO drop the .tz from the ILP address template (why?? need to verify this ) 
     private static final String ILP_ADDRESS_TEMPLATE = "g.%s.%s.%s";
 
     @Autowired
@@ -47,7 +45,6 @@ public class IlpBuilder {
         String ilpPacket = ilpConditionHandlerImpl.vNextGetILPPacket(ilpAddress, ContextUtil.formatAmount(amount), transaction); 
         String ilpCondition = ilpConditionHandlerImpl.generateCondition(ilpPacket, conectorIlpSecret.getBytes());
         String fulfillment = ilpConditionHandlerImpl.generateFulfillment(ilpPacket, conectorIlpSecret.getBytes());
-        //TOMD TODO verify this against master branch and or v1.5.0 tag
         Ilp Ilp = new Ilp(ilpPacket, ilpCondition, fulfillment, transaction);
         return Ilp;
     }
@@ -83,8 +80,6 @@ public class IlpBuilder {
         transaction.setPayer(payer.getIlpParty());
         transaction.setPayee(payee.getIlpParty());
 
-        //TOMD: TODO Add transaction type (required by vNext)
-        //      but verify that this is the correct way to do it
         TransactionType transactionType = new TransactionType();
         transactionType.setScenario("DEPOSIT");        // or get from request
         transactionType.setInitiator("PAYER");

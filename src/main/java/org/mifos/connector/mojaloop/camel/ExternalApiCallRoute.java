@@ -122,9 +122,6 @@ public class ExternalApiCallRoute extends RouteBuilder {
                     // Store response body as property if needed
                     String responseBodyStr = exchange.getIn().getBody(String.class);
                     exchange.setProperty("responseBody", responseBodyStr);
-                    
-                    log.info("GAZELLE-DBG EXTERNAL ROUTE Response Body: {}", responseBodyStr);
-                    log.info("GAZELLE-DBG EXTERNAL ROUTE Response Headers: {}", exchange.getIn().getHeaders());
                 });
     }
 

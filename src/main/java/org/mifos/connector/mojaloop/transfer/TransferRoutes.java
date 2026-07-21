@@ -223,10 +223,7 @@ public class TransferRoutes extends ErrorHandlerRouteBuilder {
                 .process(pojoToString)
                 .process(addTraceHeaderProcessor)
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
-                // TOMD  TODO hardcoded for debug the HOST should be set in the properties 
-                //       or otherwise in the workflow
-                //.setProperty(HOST, simple("{{switch.transfers-host}}"))
-                .setProperty(HOST, constant("http://fspiop-api-svc.vnext.svc.cluster.local:4000"))
+                .setProperty(HOST, simple("{{switch.transfers-host}}"))
                 .setProperty(ENDPOINT, constant("/transfers"))
                 .to("direct:external-api-call");
     }

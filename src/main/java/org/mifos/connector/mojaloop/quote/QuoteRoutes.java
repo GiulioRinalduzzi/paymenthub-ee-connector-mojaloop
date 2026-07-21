@@ -228,11 +228,7 @@ public class QuoteRoutes extends ErrorHandlerRouteBuilder {
                             requestAmount,
                             new MoneyData(requestAmount.getAmountDecimal().subtract(fspFeeAmount).subtract(fspCommissionAmount).stripTrailingZeros().toPlainString(),
                                     requestAmount.getCurrency()),
-                            // TOMD TODO : correct the maths here to get the correct amount but for now I just hardcode payeeFspFee else there are
-                            //      errors from vNext quotes i.e it returns 400 
-                            // new MoneyData(fspFeeAmount.compareTo(ZERO) == 0 ? "0" : fspFeeAmount.toPlainString(), fspFeeCurrency),
                             new MoneyData(new BigDecimal("0.3"), fspFeeCurrency),
-                            //new MoneyData(fspCommissionAmount.compareTo(ZERO) == 0 ? "0" : fspCommissionAmount.toPlainString(), fspCommissionCurrency),
                             new MoneyData(new BigDecimal("0.4"), fspCommissionCurrency),
                             LocalDateTime.now().plusHours(1),
                             null,
@@ -262,21 +258,8 @@ public class QuoteRoutes extends ErrorHandlerRouteBuilder {
                     transactionType.setScenario(channelRequest.getTransactionType().getScenario());
 
                     PartyIdInfo payerParty = channelRequest.getPayer().getPartyIdInfo();
-                    // TOMD: TODO review this code and verify 
-                    //  The payer and payeeFSpId should come from the channelRequest object as they appear to be reliably sent 
-                    //       this issue is that this needs a change to the connector-common TransactionChannelRequestDTO object
-                    //       to support this.  Making this modifiucation would reduce the need for seperate party properties 
-                    //       config in the connector-mojaloop project.
-                //     partyProperties.listAllParties().forEach(party -> {
-                //         log.info("Party / tenantId : {}", party.getTenantId());
-                //         log.info("Party / fspId : {}", party.getFspId());
-                //         log.info("Domain/ fspId : {}", party.getDomain());
-                //     });
                     String payerFspId = partyProperties.getPartyByTenant(exchange.getProperty(TENANT_ID, String.class)).getFspId();
                     PartyIdInfo requestPayeePartyIdInfo = channelRequest.getPayee().getPartyIdInfo();
-                    // TOMD: TODO  the payeeFspID is null in the channel request object
-                    //       need to debug and remove this hardcoding   
-                    //String payeeFspId = partyProperties.getPartyByTenant(requestPayeePartyIdInfo.getFspId()).getFspId();
                     String payeeFspId = "bluebank";
                     Party payer = new Party(
                             new PartyIdInfo(payerParty.getPartyIdType(),
@@ -315,24 +298,14 @@ public class QuoteRoutes extends ErrorHandlerRouteBuilder {
                             channelRequest.getExtensionList());
                     exchange.getIn().setBody(quoteRequest);
 
-                    // TOMD TODO: hardcoded fix this as it is temporary workaround to get the  quote request to work
-                    //exchange.setProperty(FSPIOP_SOURCE.headerName(), payerFspId);
                     exchange.setProperty(FSPIOP_SOURCE.headerName(), "greenbank");
                     exchange.setProperty(FSPIOP_DESTINATION.headerName(), "bluebank");
-                    //exchange.setProperty(FSPIOP_DESTINATION.headerName(), exchange.getProperty(PARTY_LOOKUP_FSP_ID));
                     mojaloopUtil.setQuoteHeadersRequest(exchange);
-                    if (simple("{{switch.quotes-host}}") == null ) {
-                        System.exit(HIGHEST);
-                    } else { 
-                        logger.info("Quote host is {} ", simple("{{switch.quotes-host}}"));
-                    }
-                
                 })
                 .process(pojoToString)
                 .process(addTraceHeaderProcessor)
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
-                // TOMDO TODO : hardcoded for now needs to come from properties config 
-                .setProperty(HOST, constant("http://fspiop-api-svc.vnext.svc.cluster.local:4000"))
+                .setProperty(HOST, simple("{{switch.quotes-host}}"))
                 .setProperty(ENDPOINT, constant("/quotes"))
                 .to("direct:external-api-call");
     }
