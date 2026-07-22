@@ -4,4 +4,4 @@
  * This project uses @Incubating APIs which are subject to change.
  */
 
-rootProject.name = 'ph-ee-connector-mojaloop-java'
+rootProject.name = 'paymenthub-ee-connector-mojaloop'

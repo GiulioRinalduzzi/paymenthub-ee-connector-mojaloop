@@ -82,5 +82,11 @@ test {
 bootRun {
     systemProperty "logging.level.root", "ERROR"
     systemProperty "spring.profiles.active", "med"
-    
+
+}
+
+// Deterministic boot jar name so the Dockerfile can copy exactly one file
+// (avoids the *.jar glob picking up the plain -plain.jar when `build` runs).
+bootJar {
+    archiveFileName = 'app.jar'
 }
