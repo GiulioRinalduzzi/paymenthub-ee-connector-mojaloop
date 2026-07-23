@@ -1,0 +1,7 @@
+parties:
+  - tenantId: greenbank
+    fspId: greenbank
+    domain: ph-ee-connector-mojaloop-java.paymenthub.svc.cluster.local
+  - tenantId: bluebank
+    fspId: bluebank
+    domain: ph-ee-connector-mojaloop-java.paymenthub.svc.cluster.local
