@@ -25,6 +25,40 @@ repositories {
     }
 }
 
+// interop-ilp-conditions:1.7.1 is a non-relocated uber jar: besides the ILP
+// classes we use, it bundles its own stale Jackson 2.13 (plus Mockito, Hamcrest,
+// cglib, ASM). In the Spring Boot boot jar it sorts before jackson-annotations,
+// so its old com.fasterxml.jackson.annotation.JsonFormat$Feature shadows the
+// BOM-managed Jackson 2.18 and throws
+// "NoSuchFieldError ... READ_DATE_TIMESTAMPS_AS_NANOSECONDS" in
+// jackson-datatype-jsr310 at the quote step. Those classes are baked into the
+// jar, so a Gradle `exclude` cannot remove them. We fetch the jar in isolation
+// (ilpRaw) and repackage it, keeping only the com.ilp.conditions.* and
+// org.interledger.* packages this connector actually references and dropping the
+// bundled third-party classes. Also shrinks the artifact 3.86 MB -> ~0.35 MB.
+configurations {
+    ilpRaw { transitive = false }
+}
+
+dependencies {
+    ilpRaw 'org.mifos:interop-ilp-conditions:1.7.1'
+}
+
+tasks.register('stripIlpConditions', Jar) {
+    archiveFileName = 'interop-ilp-conditions-1.7.1-slim.jar'
+    destinationDirectory = layout.buildDirectory.dir('slim-libs')
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.ilpRaw.collect { zipTree(it) } }
+    exclude 'com/fasterxml/**'
+    exclude 'org/mockito/**'
+    exclude 'org/hamcrest/**'
+    exclude 'org/objenesis/**'
+    exclude 'module-info.class'
+    exclude 'META-INF/maven/com.fasterxml.jackson.core/**'
+    exclude 'META-INF/services/com.fasterxml.**'
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+}
+
 dependencies {
     // The paymenthub-ee BOM pins Spring Boot 3.4, Camel 4, Zeebe 8, Jakarta EE 10
     // and every other shared library version (including Jackson — the old
@@ -33,7 +67,10 @@ dependencies {
     implementation enforcedPlatform('org.mifos:paymenthub-ee-bom:2.0.0-SNAPSHOT')
 
     implementation 'org.mifos:paymenthub-ee-core:2.0.0-SNAPSHOT'
-    implementation 'org.mifos:interop-ilp-conditions:1.7.1'
+    // Slimmed interop-ilp-conditions (see stripIlpConditions above) instead of the
+    // raw 'org.mifos:interop-ilp-conditions:1.7.1' uber jar, which drags in a stale
+    // bundled Jackson that breaks jsr310 deserialization at the quote step.
+    implementation files(tasks.named('stripIlpConditions'))
     implementation 'org.apache.camel.springboot:camel-spring-boot-starter'
     implementation 'org.apache.camel:camel-undertow'
     implementation 'org.apache.camel.springboot:camel-jackson-starter'
