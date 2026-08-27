@@ -11,7 +11,7 @@ camel:
   springboot:
     main-run-controller: true
   dataformat:
-    json-jackson:
+    jackson:
       auto-discover-object-mapper: true
 
 bpmn:
