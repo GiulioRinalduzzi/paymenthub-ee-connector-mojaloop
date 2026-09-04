@@ -1,10 +1,10 @@
 # parties:
 #   - tenantId: greenbank
 #     fspId: greenbank
-#     domain: ph-ee-connector-mojaloop-java.paymenthub.svc.cluster.local
+#     domain: paymenthub-ee-connector-mojaloop.paymenthub.svc.cluster.local
 #   - tenantId: bluebank
 #     fspId: bluebank
-#     domain: ph-ee-connector-mojaloop-java.paymenthub.svc.cluster.local
+#     domain: paymenthub-ee-connector-mojaloop.paymenthub.svc.cluster.local
 
 camel:
   server-port: 5000
@@ -31,7 +31,7 @@ zeebe:
 #    number-of-workers: 15
 #    evenly-allocated-max-jobs: "#{${zeebe.client.max-execution-threads} / ${zeebe.client.number-of-workers}}"
   broker:
-    #contactpoint: "ph-ee-zeebe:26500"
+    #contactpoint: "paymenthub-infra-zeebe-gateway:26500"
     contactpoint: "zeebe-gateway.mifos.gazelle.test:80"
 
 connector:
