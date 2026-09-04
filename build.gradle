@@ -97,7 +97,7 @@ dependencies {
 
 group = 'org.mifos'
 version = '2.0.0.mifos-SNAPSHOT'
-description = 'ph-ee-connector-mojaloop-java'
+description = 'paymenthub-ee-connector-mojaloop'
 java.sourceCompatibility = JavaVersion.VERSION_21
 
 publishing {
