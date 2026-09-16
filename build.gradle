@@ -88,6 +88,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    // Needed by the @ConfigurationProperties records in org.mifos.connector.mojaloop.config:
+    // Jakarta Bean Validation annotations only take effect when a validator is on the
+    // classpath. Version comes from the BOM, nothing is pinned here.
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     configurations {
         // all*.exclude group: 'org.json', module: 'json'
