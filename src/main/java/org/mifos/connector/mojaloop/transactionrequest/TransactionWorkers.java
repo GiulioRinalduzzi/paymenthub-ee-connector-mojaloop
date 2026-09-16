@@ -7,6 +7,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.support.DefaultExchange;
 import org.mifos.connector.common.channel.dto.TransactionChannelRequestDTO;
+import org.mifos.connector.mojaloop.config.ZeebeProperties;
 import org.mifos.connector.mojaloop.zeebe.ZeebeProcessStarter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,8 +58,11 @@ public class TransactionWorkers {
     @Value("#{'${dfspids}'.split(',')}")
     private List<String> dfspids;
 
-    @Value("${zeebe.client.evenly-allocated-max-jobs}")
-    private int workerMaxJobs;
+    private final int workerMaxJobs;
+
+    public TransactionWorkers(ZeebeProperties zeebeProperties) {
+        this.workerMaxJobs = zeebeProperties.client().evenlyAllocatedMaxJobs();
+    }
 
     @PostConstruct
     public void setupWorkers() {

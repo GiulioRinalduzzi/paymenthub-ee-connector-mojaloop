@@ -6,6 +6,8 @@ import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.support.DefaultExchange;
 import org.mifos.connector.common.mojaloop.dto.TransferSwitchResponseDTO;
+import org.mifos.connector.mojaloop.config.MojaloopProperties;
+import org.mifos.connector.mojaloop.config.ZeebeProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,11 +48,14 @@ public class TransferWorkers {
     @Value("#{'${dfspids}'.split(',')}")
     private List<String> dfspids;
 
-    @Value("${zeebe.client.evenly-allocated-max-jobs}")
-    private int workerMaxJobs;
+    private final int workerMaxJobs;
 
-    @Value("${mojaloop.enabled}")
-    private boolean isMojaloopEnabled;
+    private final boolean isMojaloopEnabled;
+
+    public TransferWorkers(ZeebeProperties zeebeProperties, MojaloopProperties mojaloopProperties) {
+        this.workerMaxJobs = zeebeProperties.client().evenlyAllocatedMaxJobs();
+        this.isMojaloopEnabled = mojaloopProperties.enabled();
+    }
 
     @PostConstruct
     public void setupWorkers() {
