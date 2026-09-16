@@ -9,6 +9,9 @@ import org.apache.camel.support.DefaultExchange;
 import org.mifos.connector.common.channel.dto.TransactionChannelRequestDTO;
 import org.mifos.connector.common.mojaloop.dto.FspMoneyData;
 import org.mifos.connector.common.mojaloop.dto.QuoteSwitchResponseDTO;
+import org.mifos.connector.mojaloop.config.MojaloopProperties;
+import org.mifos.connector.mojaloop.config.SwitchProperties;
+import org.mifos.connector.mojaloop.config.ZeebeProperties;
 import org.mifos.connector.mojaloop.zeebe.ZeebeProcessStarter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,17 +60,20 @@ public class QuoteWorkers {
     @Value("#{'${dfspids}'.split(',')}")
     private List<String> dfspids;
 
-    @Value("${zeebe.client.evenly-allocated-max-jobs}")
-    private int workerMaxJobs;
+    private final int workerMaxJobs;
 
-    @Value("${mojaloop.enabled}")
-    private boolean isMojaloopEnabled;
+    private final boolean isMojaloopEnabled;
 
-    @Value("${switch.quotes-host}")
-    private String quoteHost;
+    private final String quoteHost;
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    public QuoteWorkers(ZeebeProperties zeebeProperties, MojaloopProperties mojaloopProperties, SwitchProperties switchProperties) {
+        this.workerMaxJobs = zeebeProperties.client().evenlyAllocatedMaxJobs();
+        this.isMojaloopEnabled = mojaloopProperties.enabled();
+        this.quoteHost = switchProperties.quotesHost();
+    }
 
     @PostConstruct
     public void setupWorkers() {

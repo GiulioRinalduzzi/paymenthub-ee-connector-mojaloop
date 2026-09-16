@@ -9,6 +9,8 @@ import org.apache.camel.support.DefaultExchange;
 import org.mifos.connector.common.mojaloop.dto.Party;
 import org.mifos.connector.common.mojaloop.dto.PartyIdInfo;
 import org.mifos.connector.common.mojaloop.dto.PartySwitchResponseDTO;
+import org.mifos.connector.mojaloop.config.MojaloopProperties;
+import org.mifos.connector.mojaloop.config.ZeebeProperties;
 import org.mifos.connector.mojaloop.properties.PartyProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,11 +65,14 @@ public class PartyLookupWorkers {
     @Value("#{'${dfspids}'.split(',')}")
     private List<String> dfspids;
 
-    @Value("${zeebe.client.evenly-allocated-max-jobs}")
-    private int workerMaxJobs;
+    private final int workerMaxJobs;
 
-    @Value("${mojaloop.enabled}")
-    private boolean isMojaloopEnabled;
+    private final boolean isMojaloopEnabled;
+
+    public PartyLookupWorkers(ZeebeProperties zeebeProperties, MojaloopProperties mojaloopProperties) {
+        this.workerMaxJobs = zeebeProperties.client().evenlyAllocatedMaxJobs();
+        this.isMojaloopEnabled = mojaloopProperties.enabled();
+    }
 
     @PostConstruct
     public void setupWorkers() {
