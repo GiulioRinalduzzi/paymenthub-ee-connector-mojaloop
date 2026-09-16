@@ -32,10 +32,10 @@ import static org.mifos.connector.mojaloop.zeebe.ZeebeVariables.AUTH_RETRIES_LEF
 import static org.mifos.connector.mojaloop.zeebe.ZeebeVariables.PAYER_CONFIRMATION_RETRY_COUNT;
 import static org.mifos.connector.mojaloop.zeebe.ZeebeVariables.TRANSACTION_REQUEST_RETRY_COUNT;
 import static org.mifos.connector.mojaloop.zeebe.ZeebeVariables.TRANSACTION_STATE;
-import static org.mifos.connector.mojaloop.zeebe.ZeebeeWorkers.WORKER_SEND_AUTH_CONFIRMATION;
-import static org.mifos.connector.mojaloop.zeebe.ZeebeeWorkers.WORKER_SEND_AUTH_RESPONSE;
-import static org.mifos.connector.mojaloop.zeebe.ZeebeeWorkers.WORKER_SEND_TRANSACTION_STATE_RESPONSE;
-import static org.mifos.connector.mojaloop.zeebe.ZeebeeWorkers.WORKER_TRANSACTION_REQUEST;
+import static org.mifos.connector.mojaloop.zeebe.ZeebeWorkers.WORKER_SEND_AUTH_CONFIRMATION;
+import static org.mifos.connector.mojaloop.zeebe.ZeebeWorkers.WORKER_SEND_AUTH_RESPONSE;
+import static org.mifos.connector.mojaloop.zeebe.ZeebeWorkers.WORKER_SEND_TRANSACTION_STATE_RESPONSE;
+import static org.mifos.connector.mojaloop.zeebe.ZeebeWorkers.WORKER_TRANSACTION_REQUEST;
 
 @Component
 @ConditionalOnExpression("!${mojaloop.perf-mode:false}")

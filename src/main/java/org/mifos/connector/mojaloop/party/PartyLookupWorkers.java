@@ -37,9 +37,9 @@ import static org.mifos.connector.mojaloop.zeebe.ZeebeVariables.PARTY_LOOKUP_RET
 import static org.mifos.connector.mojaloop.zeebe.ZeebeVariables.PAYEE_PARTY_RESPONSE;
 import static org.mifos.connector.mojaloop.zeebe.ZeebeVariables.TENANT_ID;
 import static org.mifos.connector.mojaloop.zeebe.ZeebeVariables.TRANSACTION_ID;
-import static org.mifos.connector.mojaloop.zeebe.ZeebeeWorkers.WORKER_PARTY_LOOKUP_LOCAL_RESPONSE;
-import static org.mifos.connector.mojaloop.zeebe.ZeebeeWorkers.WORKER_PARTY_LOOKUP_REQUEST;
-import static org.mifos.connector.mojaloop.zeebe.ZeebeeWorkers.WORKER_PARTY_REGISTRATION_ORACLE;
+import static org.mifos.connector.mojaloop.zeebe.ZeebeWorkers.WORKER_PARTY_LOOKUP_LOCAL_RESPONSE;
+import static org.mifos.connector.mojaloop.zeebe.ZeebeWorkers.WORKER_PARTY_LOOKUP_REQUEST;
+import static org.mifos.connector.mojaloop.zeebe.ZeebeWorkers.WORKER_PARTY_REGISTRATION_ORACLE;
 
 @Component
 @ConditionalOnExpression("!${mojaloop.perf-mode:false}")

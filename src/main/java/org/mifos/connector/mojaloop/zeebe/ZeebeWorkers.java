@@ -23,7 +23,7 @@ import static org.mifos.connector.mojaloop.zeebe.ZeebeMessages.ACCEPT_QUOTE;
 
 @Component
 @ConditionalOnExpression("!${mojaloop.perf-mode:false}")
-public class ZeebeeWorkers {
+public class ZeebeWorkers {
 
     public static final String WORKER_GENERATE_OTP = "generate-otp-";
     public static final String WORKER_PARTY_LOOKUP_REQUEST = "party-lookup-request-";
@@ -51,7 +51,7 @@ public class ZeebeeWorkers {
 
     private final int workerMaxJobs;
 
-    public ZeebeeWorkers(ZeebeProperties zeebeProperties) {
+    public ZeebeWorkers(ZeebeProperties zeebeProperties) {
         this.workerMaxJobs = zeebeProperties.client().evenlyAllocatedMaxJobs();
     }
 

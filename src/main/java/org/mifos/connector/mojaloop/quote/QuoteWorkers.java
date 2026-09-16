@@ -39,8 +39,8 @@ import static org.mifos.connector.mojaloop.zeebe.ZeebeVariables.QUOTE_SWITCH_REQ
 import static org.mifos.connector.mojaloop.zeebe.ZeebeVariables.TENANT_ID;
 import static org.mifos.connector.mojaloop.zeebe.ZeebeVariables.TIMEOUT_QUOTE_RETRY_COUNT;
 import static org.mifos.connector.mojaloop.zeebe.ZeebeVariables.TRANSACTION_ID;
-import static org.mifos.connector.mojaloop.zeebe.ZeebeeWorkers.WORKER_PAYEE_QUOTE_RESPONSE;
-import static org.mifos.connector.mojaloop.zeebe.ZeebeeWorkers.WORKER_QUOTE;
+import static org.mifos.connector.mojaloop.zeebe.ZeebeWorkers.WORKER_PAYEE_QUOTE_RESPONSE;
+import static org.mifos.connector.mojaloop.zeebe.ZeebeWorkers.WORKER_QUOTE;
 
 @Component
 @ConditionalOnExpression("!${mojaloop.perf-mode:false}")
