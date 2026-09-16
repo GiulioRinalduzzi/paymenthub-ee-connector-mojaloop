@@ -27,8 +27,8 @@ import static org.mifos.connector.mojaloop.zeebe.ZeebeVariables.PAYEE_QUOTE_RESP
 import static org.mifos.connector.mojaloop.zeebe.ZeebeVariables.SWITCH_TRANSFER_REQUEST;
 import static org.mifos.connector.mojaloop.zeebe.ZeebeVariables.TIMEOUT_TRANSFER_RETRY_COUNT;
 import static org.mifos.connector.mojaloop.zeebe.ZeebeVariables.TRANSACTION_ID;
-import static org.mifos.connector.mojaloop.zeebe.ZeebeeWorkers.WORKER_PAYEE_TRANSFER_RESPONSE;
-import static org.mifos.connector.mojaloop.zeebe.ZeebeeWorkers.WORKER_SEND_TRANSFER_REQUEST;
+import static org.mifos.connector.mojaloop.zeebe.ZeebeWorkers.WORKER_PAYEE_TRANSFER_RESPONSE;
+import static org.mifos.connector.mojaloop.zeebe.ZeebeWorkers.WORKER_SEND_TRANSFER_REQUEST;
 
 @Component
 @ConditionalOnExpression("!${mojaloop.perf-mode:false}")
